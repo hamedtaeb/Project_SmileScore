@@ -1,1 +1,78 @@
+# Define year ranges for each set
+train_years = list(range(2015, 2023))                    
+test_year = [2023]                     
 
+# Create masks for each set
+train_mask = df['year'].isin(train_years)
+test_mask = df['year'].isin(test_year)
+
+# Extract features (X) and target (y) for each set
+X_train = df[train_mask].drop(columns=['happiness_score', 'country', 'region', 'year'])
+y_train = df[train_mask]['happiness_score']
+
+X_test = df[test_mask].drop(columns=['happiness_score', 'country', 'region', 'year'])
+y_test = df[test_mask]['happiness_score']
+
+
+print(f"Train: {X_train.shape} (Years: {df[train_mask]['year'].unique()})")
+print(f"Test: {X_test.shape} (Year: {df[test_mask]['year'].unique()})")
+
+duplicated = pd.concat([X_train, X_test]).duplicated().sum()
+print(duplicated)
+
+
+from sklearn.preprocessing import StandardScaler
+
+scaler = StandardScaler()
+X_train_scaled = scaler.fit_transform(X_train)           
+X_test_scaled = scaler.transform(X_test)
+
+import tensorflow as tf
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Dense, Dropout
+from tensorflow.keras.callbacks import EarlyStopping
+
+# Define model
+model = Sequential([
+    Dense(64, activation='relu', input_shape=(X_train_scaled.shape[1],)),
+    Dropout(0.2),
+    Dense(32, activation='relu'),
+    Dense(1)  # Linear output layer for regression
+])
+
+# Compile
+model.compile(optimizer='adam', loss='mse', metrics=['mae'])
+
+# Early stopping
+early_stop = EarlyStopping(monitor='val_loss', patience=10, restore_best_weights=True)
+
+# Train
+history = model.fit(
+    X_train_scaled, y_train,
+    epochs=100,
+    batch_size=32,
+    callbacks=[early_stop],
+    verbose=1
+)
+
+# Evaluate
+test_loss, test_mae = model.evaluate(X_test_scaled, y_test, verbose=0)
+y_pred_nn = model.predict(X_test_scaled).flatten()
+
+print("\nNeural Network Evaluation:")
+print(f"- Test MAE: {test_mae:.3f}")
+print(f"- Test RMSE: {np.sqrt(mean_squared_error(y_test, y_pred_nn)):.3f}")
+print(f"- Test R²: {r2_score(y_test, y_pred_nn):.3f}")
+
+# Predictions
+y_pred_test = model.predict(X_test_scaled).flatten()
+
+# Metrics
+test_mae = mean_absolute_error(y_test, y_pred_test)
+test_rmse = mean_squared_error(y_test, y_pred_test, squared=False)
+test_r2 = r2_score(y_test, y_pred_test)
+
+print("Neural Network Test Set (2023) Evaluation:")
+print(f"- MAE: {test_mae:.3f}")
+print(f"- RMSE: {test_rmse:.3f}")
+print(f"- R²: {test_r2:.3f}")

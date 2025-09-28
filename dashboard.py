@@ -17,24 +17,39 @@ import dash_bootstrap_components as dbc
 # Load dataset
 df = pd.read_csv('dataset/dataset.csv')
 
-app = Dash(__name__, external_stylesheets=[dbc.themes.FLATLY]) 
+app = Dash(__name__, external_stylesheets=[dbc.themes.MINTY]) 
+
+# Add Navbar
+navbar = dbc.NavbarSimple(
+    brand="Global Happiness Dashboard",
+    color="primary",
+    dark=True,
+    className="mb-4"
+)
 
 # App layout
 app.layout = dbc.Container([
+    navbar,
+
+    
     dbc.Row([
         dbc.Col([
             dbc.Card([
                 dbc.CardHeader(
-                    html.H5(
+                    html.H1(
                         "Welcome to Global Happiness Dashboard!",
-                        className="card-title text-center",
-                        style={"color": "#2dd4bf"}
+                        className="text-center mt=4",
+                        style={"color": "#20c997"}
                     )
                 ),
                 dbc.CardBody([
                     html.P(
-                        "Explore global happiness trends based on factors like GDP, social support, and life expectancy.",
-                        className="card-text text-center"
+                        "This dashboard is all about exploring what makes people happy around the world. " \
+                        "We look at things like income, social support, and health to see how they shape happiness. " \
+                        "With data, machine learning, and interactive charts, you can dive in, play with the numbers, "
+                        "and discover the patterns that tell the story of global well-being.",
+                        className="card-text fs-5", 
+                        style={"text-align": "justify", "color": "#212529"},
                     )
                 ])
             ])

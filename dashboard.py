@@ -38,14 +38,14 @@ app.layout = dbc.Container([
                 dbc.CardHeader(
                     html.H1(
                         "Welcome to Global Happiness Dashboard!",
-                        className="text-center mt=4",
+                        className="text-center mt-4",
                         style={"color": "#20c997"}
                     )
                 ),
                 dbc.CardBody([
                     html.P(
-                        "This dashboard is all about exploring what makes people happy around the world. " \
-                        "We look at things like income, social support, and health to see how they shape happiness. " \
+                        "This dashboard is all about exploring what makes people happy around the world. "
+                        "We look at things like income, social support, and health to see how they shape happiness. "
                         "With data, machine learning, and interactive charts, you can dive in, play with the numbers, "
                         "and discover the patterns that tell the story of global well-being.",
                         className="card-text fs-5", 
@@ -53,7 +53,7 @@ app.layout = dbc.Container([
                     )
                 ])
             ])
-        ], id="title-card", width=12)
+        ], id="title-card", width=12),
     ]), 
 
     # Dropdown for country selection
@@ -74,14 +74,13 @@ app.layout = dbc.Container([
 
     # Graphs
     dbc.Row([
-        dbc.Col([
-            dcc.Graph(id='happiness-score-graph')
-        ], width=6),
-        dbc.Col([
-            dcc.Graph(id='income-vs-happiness-graph')
-        ], width=6)
+        dbc.Col([dcc.Graph(id='happiness-score-graph')], width=6),
+        dbc.Col([dcc.Graph(id='income-vs-happiness-graph')], width=6)
     ]),
-], fluid=True)
+], fluid=True,
+   style={"backgroundColor": "#e6f5f3", "minHeight": "100vh", "padding": "20px"}  # <-- add this
+)
+
 
 # Callbacks for interactivity
 @app.callback(

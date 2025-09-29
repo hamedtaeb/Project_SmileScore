@@ -1,4 +1,3 @@
-# Import necessary libraries
 import re
 import os
 import random
@@ -7,7 +6,6 @@ import numpy as np
 import pandas as pd
 import seaborn as sns
 import plotly.express as px
-from scipy import stats as st
 import matplotlib.pyplot as plt
 import warnings
 warnings.filterwarnings('ignore')
@@ -111,4 +109,3 @@ def update_income_vs_happiness_graph(selected_country):
 # Run the app
 if __name__ == "__main__":
     app.run(debug=True, port=7124)
-

@@ -15,13 +15,17 @@ The goal is to:
 ## 📂 Dataset
 The dataset includes yearly observations from 2015–2023, with the following main features:
 
-- **country** – Name of the country  
-- **region** – Geographical region grouping  
-- **year** – Year of observation  
-- **happiness_score** – Reported happiness score (scale ~2–8)  
-- **gdp_per_capita** – Economic measure (log GDP per capita)  
-- **social_support** – Perceived support from others  
-- **healthy_life_expectancy** – Life expectancy at birth  
-- **freedom_to_make_life_choices** – Freedom in making key life decisions  
-- **generosity** – Willingness to help others / donate  
-- **perceptions_of_corruption** – Trust in government and businesses  
+
+## Quick start (conda)
+
+1. Create the conda environment (recommended):
+
+```powershell
+conda env create -f environment.yml
+conda activate smilescore
+python dashboard.py
+```
+
+2. If you don't use conda, create a venv with Python 3.11, install packages with pip, then run `python dashboard.py`.
+
+VS Code: use the Command Palette → Python: Select Interpreter to pick the env, then Run Task → "Run current Python file".

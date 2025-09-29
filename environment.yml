@@ -1,0 +1,18 @@
+name: smilescore
+channels:
+  - conda-forge
+dependencies:
+  - python=3.11
+  - numpy
+  - scikit-learn
+  - shap
+  - dash
+  - plotly
+  - dash-bootstrap-components
+  - pandas
+  - seaborn
+  - scipy
+  - matplotlib
+  - pip
+  - pip:
+    - shap

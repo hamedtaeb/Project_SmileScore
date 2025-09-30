@@ -108,6 +108,29 @@ app.layout = dbc.Container([
         dbc.Col([dcc.Graph(id='income-vs-happiness-graph')], width=12),
     ], className="mb-4"),
 
+
+
+        # Year selector (single year)
+    dbc.Row([
+        dbc.Col([
+            html.Label("Select Year:", className="fs-5", style={"color": "#212529"}),
+            dcc.Dropdown(
+                id='year-dropdown',
+                options=[{'label': int(y), 'value': int(y)} for y in sorted(df['year'].unique())],
+                value=int(df['year'].max()),
+                clearable=False,
+                style={"width": "200px"}
+            )
+        ], width=3)
+    ], className="mb-4"),
+
+    # World Heatmap row
+    dbc.Row([
+        dbc.Col([dcc.Graph(id='world-heatmap')], width=12)
+    ], className="mb-4"),
+
+
+
     # Top 10 and Bottom 10 charts
     dbc.Row([
         dbc.Col([dcc.Graph(figure=fig_top_10, id='top-10-happiest-countries')], width=6),
@@ -156,6 +179,12 @@ app.layout = dbc.Container([
     style={"backgroundColor": "#e6f5f3", "minHeight": "100vh", "padding": "20px"}
 )
 
+# Footer
+app.layout.children.append(
+    dbc.Row([
+        dbc.Col(html.Footer('© Sep 2025 Jeel Faldu, Matheus Souza, Hamed Taeb, Victor Forman  / Project. Data Source: Kaagle Dataset', className='text-center text-muted py-2'), width=12)
+    ])
+)
 # Callbacks for single-country graphs
 @app.callback(
     Output('happiness-score-graph', 'figure'),
@@ -202,6 +231,33 @@ def update_happiness_trends(selected_countries, selected_years):
                   markers=True,
                   labels={'happiness_score': 'Happiness Score', 'year': 'Year'})
     fig.update_layout(template="plotly_white", title="Happiness Score Trends")
+    return fig
+
+@app.callback(
+    Output('world-heatmap', 'figure'),
+    Input('year-dropdown', 'value')
+)
+def update_world_heatmap(selected_year):
+    # Filter and aggregate in case of duplicates
+    dff = df[df['year'] == selected_year].groupby('country', as_index=False)['happiness_score'].mean()
+
+    fig = px.choropleth(
+        dff,
+        locations='country',
+        locationmode='country names',   # directly use country names
+        color='happiness_score',
+        hover_name='country',
+        color_continuous_scale=['blue', 'white', 'red'],
+        range_color=(df['happiness_score'].min(), df['happiness_score'].max()),
+        projection='natural earth',
+        title=f'Global Happiness Scores ({selected_year})'
+    )
+
+    fig.update_traces(marker_line_width=0.2)
+    fig.update_layout(
+        margin=dict(l=10, r=10, t=50, b=10),
+        coloraxis_colorbar=dict(title='Happiness Score', ticks='outside')
+    )
     return fig
 
 # Run the app

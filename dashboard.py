@@ -1,4 +1,5 @@
 # Import necessary libraries
+import os
 import pandas as pd
 import plotly.express as px
 from dash import Dash, html, dcc, callback, Output, Input
@@ -262,4 +263,5 @@ def update_world_heatmap(selected_year):
 
 # Run the app
 if __name__ == "__main__":
-    app.run(debug=True, port=7124)
+    port = int(os.environ.get("PORT", 7124))  # Default to 7124 locally
+    app.run_server(debug=True, host='0.0.0.0', port=port)
